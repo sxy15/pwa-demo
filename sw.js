@@ -22,17 +22,25 @@ self.addEventListener('fetch', (event) => {
   console.log('SW Fetching');
   console.log(event.request.url);
   const req = event.request;
+  // 静态资源缓存策略  缓存优先 
+  // 接口数据缓存策略  网络优先
   event.respondWith(networkFirst(req));
 })
 
-async function cacheFirst(req) {}
+async function cacheFirst(req) {
+  const cache = await caches.open(cacheName);
+  const cached = await cache.match(req);
+  return cached || fetch(req);
+}
 
 async function networkFirst(req) {
+  const cache = await caches.open(cacheName);
   try {
    const fresh = await fetch(req);
+   // 更新缓存
+    await cache.put(req, fresh.clone());
     return fresh;
   } catch (error) {
-    const cache = await caches.open(cacheName);
     const cached = await cache.match(req);
     return cached;
   }
