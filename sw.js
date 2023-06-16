@@ -1,4 +1,4 @@
-const cacheName = 'v1';
+const cacheName = 'v2';
 self.addEventListener('install', async (event) => {
   console.log('SW Installed');
   const cache = await caches.open(cacheName);

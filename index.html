@@ -22,6 +22,23 @@
             console.log('service worker not registered', err)
           })
       }
+
+      if(Notification.permission === 'default') {
+        Notification.requestPermission()
+      }
+
+      if(!navigator.onLine) {
+        new Notification('提示', {
+          body: '网络不给力'
+        })
+      }
+
+      window.addEventListener('online', () => {
+        console.log('网络已连接')
+        new Notification('提示', {
+          body: '网络已连接'
+        })
+      })
     })
   </script>
 </body>
